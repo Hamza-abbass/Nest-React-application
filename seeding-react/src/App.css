@@ -1,0 +1,37 @@
+.text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+
+  /* background */
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+/* Style the Link (a tag) */
+.nav-link {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+
+  padding: 12px 24px;
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(6px);
+
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Active click */
+.nav-link:active {
+  transform: scale(0.97);
+}

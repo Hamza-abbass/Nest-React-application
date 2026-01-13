@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Theme */
+:root {
+  --primary: #2563eb;
+  --bg: #020617;
+  --card: #020617;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --border: #1f2937;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Background */
+.main_container {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Card */
+.container {
+  background: var(--card);
+  width: 380px;
+  padding: 30px 35px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* 🔹 LOGIN SWITCH BUTTONS */
+.login-switch {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.login-switch button {
+  flex: 1;
+  padding: 10px;
+  background: var(--bg);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.login-switch button:hover {
+  color: var(--text);
+  border-color: var(--primary);
+}
+
+.login-switch button.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+}
+
+/* Heading */
+.heading h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: var(--text);
+  font-size: 26px;
+  font-weight: 700;
+}
+
+/* Input group */
+.inputs {
+  margin-bottom: 18px;
+}
+
+.inputs h2 {
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* Inputs */
+.inputs input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+/* Focus effect */
+.inputs input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+}
+
+/* Main Button */
+.container > button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background: var(--primary);
+  color: var(--text);
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.container > button:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+/* Response box */
+.response-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 18px;
+  font-size: 13px;
+  color: var(--muted);
+}
+span{
+  color: red;
+}
+
+/* Main Button (Login / Submit) */
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background: var(--primary);
+  color: #fff; /* White text for better contrast */
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease, transform 0.2s ease;
+}
+
+.login-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+
+/* Small screens */
+@media (max-width: 420px) {
+  .container {
+    width: 90%;
+  }
+}

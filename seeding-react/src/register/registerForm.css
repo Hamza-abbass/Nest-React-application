@@ -1,0 +1,130 @@
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.8); /* darker overlay like --bg */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  width: 380px;
+  padding: 25px;
+  border-radius: 14px;
+  background: var(--card); /* dark card color */
+  border: 1px solid #1f2937;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+  animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.popup-content h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 13px;
+  margin-bottom: 4px;
+  color: var(--muted);
+}
+
+.input-group input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #1f2937;
+  outline: none;
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.input-group input::placeholder {
+  color: var(--muted);
+}
+
+.input-group input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 5px rgba(37, 99, 235, 0.5);
+}
+
+/* buttons */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.submit-btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  background: var(--primary); /* primary theme color */
+  transition: 0.3s ease;
+}
+
+.submit-btn:hover {
+  background: #1d4ed8;
+}
+
+.close-btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid #1f2937;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.close-btn:hover {
+  background: #1f2937;
+}
+
+
+
+
+.input-group select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #1f2937;
+  outline: none;
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* placeholder-like first option style */
+.input-group select option:first-child {
+  color: var(--muted);
+}
+
+/* focus effect */
+.input-group select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 5px rgba(37, 99, 235, 0.5);
+}
+
