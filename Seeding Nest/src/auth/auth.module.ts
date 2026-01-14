@@ -7,12 +7,12 @@ import { RedisModule } from 'src/redis/redis.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/user.entity';
 import { Rolee } from 'src/seed/role.entity';
-import { EncryptionModule } from 'src/encryption-decryption/encryt.module';
-
+// import { EncryptionModule } from 'src/encryption-decryption/encryt.module';
+// EncryptionModule
 
 @Module({
   providers: [AuthService],
   controllers: [AuthController],
-  imports:[UserModule,JwtModule,RedisModule,EncryptionModule,TypeOrmModule.forFeature([User,Rolee])]
+  imports:[UserModule,JwtModule,RedisModule,TypeOrmModule.forFeature([User,Rolee])]
 })
 export class AuthModule {}
