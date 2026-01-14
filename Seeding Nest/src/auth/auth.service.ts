@@ -4,7 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt'
 import { randomInt } from 'crypto';
-import { EncryptionService } from 'src/encryption-decryption/encryption.service';
 import { RedisService } from 'src/redis/redis.service';
 import { Rolee } from 'src/seed/role.entity';
 import { User } from 'src/user/user.entity';
@@ -20,7 +19,6 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly mailService: MailerService,
         private readonly redisService: RedisService,
-        private readonly encryptionService: EncryptionService,
         @InjectRepository(Rolee)
         private roleRepository: Repository<Rolee>,
         @InjectRepository(User)
@@ -71,10 +69,9 @@ export class AuthService {
         const otp_expires_at = new Date(Date.now() + 1 * 60 * 1000);
 
         if (password == confirmPassword) {
-            const encryptUsername = this.encryptionService.encrypt(username);
 
             // this.logger.log(encryptEmail);
-            const result = await this.usersService.create({ username: encryptUsername, email, password: hashedPassword, confirmPassword: HashedPassword, role_id: '566bb6b2-a7b1-47ad-a4f6-ea730944a44b', otp: hashedOTP, otp_expires_at: otp_expires_at });
+            const result = await this.usersService.create({ username, email, password: hashedPassword, confirmPassword: HashedPassword, role_id: '566bb6b2-a7b1-47ad-a4f6-ea730944a44b', otp: hashedOTP, otp_expires_at: otp_expires_at });
             const message = `This is your otp ${otp}`;
             this.mailService.sendMail({
                 from: 'Hamza abbas <abbashamza59099@gmail.com>',
@@ -118,9 +115,6 @@ export class AuthService {
     // Login SuperAdmin part 
     async login(email: string, password: string) {
         const user = await this.usersService.findByEmail(email);
-        const Dbusername = user?.username;
-        const username = this.encryptionService.decrypt(Dbusername);
-        return username;
 
         // this.logger.log(username);
         if (!user) {
