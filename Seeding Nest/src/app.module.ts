@@ -16,13 +16,12 @@ import { Order } from './Entities/orders.entity';
 import { Customer } from './Entities/customer.entity';
 import { Contact } from './Entities/contact.entity';
 import { Products } from './Entities/products.entity';
-// import { EncryptionModule } from './encryption-decryption/encryt.module';
+import { EncryptionDecryptionModule } from './encryption_decryption/encryption_decryption.module';
 
 
-// EncryptionModule
 @Module({
   imports: [
-    UserModule, AuthModule, JwtModule, SeedModule,
+    UserModule, AuthModule, JwtModule, SeedModule,EncryptionDecryptionModule,
     TypeOrmModule.forFeature([Order,Customer,Contact,Products]),
     ConfigModule.forRoot({
       isGlobal: true,
