@@ -4,7 +4,11 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt'
 import { randomInt } from 'crypto';
-import { EncryptionDecryptionService } from 'src/encryption_decryption/encryption_decryption.service';
+import { RsaService } from 'src/encryptionAsymmetric/rsa.service';
+import { EncryptionDecryptionServiceCBC } from 'src/SymmetricAlgorithms/encryption_decryptionCBC.service';
+import { EncryptionDecryptionServiceCCM } from 'src/SymmetricAlgorithms/encryption_decryptionCCM.service';
+import { EncryptionDecryptionServiceCTR } from 'src/SymmetricAlgorithms/encryption_decryptionCTR.service';
+import { EncryptionDecryptionServiceGCM } from 'src/SymmetricAlgorithms/encryption_decryptionGCM.service';
 import { RedisService } from 'src/redis/redis.service';
 import { Rolee } from 'src/seed/role.entity';
 import { User } from 'src/user/user.entity';
@@ -16,15 +20,22 @@ import { Repository } from 'typeorm';
 export class AuthService {
     private logger = new Logger(AuthService.name);
     constructor(
+        @InjectRepository(Rolee)
+        private roleRepository: Repository<Rolee>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
         private readonly usersService: UserService,
         private readonly jwtService: JwtService,
         private readonly mailService: MailerService,
         private readonly redisService: RedisService,
-        private readonly encryptionService: EncryptionDecryptionService,
-        @InjectRepository(Rolee)
-        private roleRepository: Repository<Rolee>,
-        @InjectRepository(User)
-        private userRepository: Repository<User>
+
+        private readonly encryptionServiceGCM :EncryptionDecryptionServiceGCM,
+        private readonly encryptionServiceCBC :EncryptionDecryptionServiceCBC,
+        private readonly encryptionServiceCTR :EncryptionDecryptionServiceCTR,
+        private readonly encryptionServiceCCM:EncryptionDecryptionServiceCCM,
+        private readonly rsaService: RsaService,
+
+
     ) { }
     async new(username: string, email: string, password: string, role_id: string) {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -48,12 +59,11 @@ export class AuthService {
     async register(username: string, email: string, password: string, confirmPassword: string) {
         const otp = randomInt(100000, 999999).toString();
         const hashedOTP = await bcrypt.hash(otp, 10);
-
-
-
+        const otp_expires_at = new Date(Date.now() + 1 * 60 * 1000);
         const existingUser = await this.usersService.findByEmail(email);
         const DbisVarified = existingUser?.isVarified;
         if (existingUser && DbisVarified == false) {
+
             const message = `This is your otp ${otp}`;
             this.mailService.sendMail({
                 from: 'Hamza abbas <abbashamza59099@gmail.com>',
@@ -61,6 +71,9 @@ export class AuthService {
                 subject: `Hi there`,
                 text: message,
             })
+            const result = await this.userRepository.update({ email }, { otp: hashedOTP, otp_expires_at: otp_expires_at });
+
+
             return { message: 'Verification screen again', id: existingUser.id }
         }
         if (existingUser && DbisVarified == true) {
@@ -68,14 +81,37 @@ export class AuthService {
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const HashedPassword = await bcrypt.hash(confirmPassword, 10);
-        const otp_expires_at = new Date(Date.now() + 1 * 60 * 1000);
 
         if (password == confirmPassword) {
-            const encryptUsername = this.encryptionService.encrypt(username);
+
+            // ------- using Symmetric(GCM) Algorithm -------
+            // const encryptUsername = this.encryptionServiceGCM.encrypt(username);
+            // const decryptUsername = this.encryptionServiceGCM.decrypt(encryptUsername);
 
 
-            // this.logger.log(encryptEmail);
-            const result = await this.usersService.create({ username: encryptUsername, email, password: hashedPassword, confirmPassword: HashedPassword, role_id: '566bb6b2-a7b1-47ad-a4f6-ea730944a44b', otp: hashedOTP, otp_expires_at: otp_expires_at });
+            // ------- using Symmetric(CBC) Algorithm -------
+            // const encryptedUsername = this.encryptionServiceCBC.encryption(username);
+            // const decryptUsername = this.encryptionServiceCBC.decryption(encryptedUsername);
+
+
+            // ------- using Symmetric(CTR) Algorithm -------
+            // const encryptedUsername = this.encryptionServiceCTR.encryption(username);
+            // const decryptUsername = this.encryptionServiceCTR.decryption(encryptedUsername);
+
+
+             // ------- using Symmetric(CCM) Algorithm -------
+            // const encryptedUsername = this.encryptionServiceCCM.encryption(username);
+            // const decryptUsername = this.encryptionServiceCCM.decryption(encryptedUsername);
+            
+            
+            
+            
+            // ------- using Asymmetric Algorithm -------
+            // const encryptUsername = this.rsaService.Encrypt(username);
+            // const decryptUsername = this.rsaService.Decrypt(encryptUsername);
+
+
+            const result = await this.usersService.create({ username, email, password: hashedPassword, confirmPassword: HashedPassword, role_id: '566bb6b2-a7b1-47ad-a4f6-ea730944a44b', otp: hashedOTP, otp_expires_at: otp_expires_at });
             const message = `This is your otp ${otp}`;
             this.mailService.sendMail({
                 from: 'Hamza abbas <abbashamza59099@gmail.com>',
@@ -89,7 +125,7 @@ export class AuthService {
         }
 
     }
-    // Varification part 
+    // Varification after registration
     async varify(otp: string, id: number) {
         const usr = await this.userRepository.findOne({ where: { id: id } });
         if (!usr) {
@@ -120,15 +156,12 @@ export class AuthService {
     async login(email: string, password: string) {
         const user = await this.usersService.findByEmail(email);
         const Dbusername = user?.username;
-        const username = this.encryptionService.decrypt(Dbusername);
+        // const username = this.encryptionService.decrypt(Dbusername);
         // return username;
-
-        this.logger.log(username);
         if (!user) {
-            throw new UnauthorizedException("Invalid credentials");
+            throw new UnauthorizedException("You are not a registered user!");
         }
         const IsVarified = user.isVarified;
-        this.logger.log(IsVarified);
         const ispasswordvalid = await bcrypt.compare(password, user.password);
         if (!ispasswordvalid) {
             throw new UnauthorizedException("Invalid credentials");
@@ -169,11 +202,9 @@ export class AuthService {
         return { otpSessionId: otpSessionId, message: text, role: name, id: id }
     }
 
-    // VerifyOTP superAdmin
+    // VerifyOTP superAdmin admin user after login
     async verify(user: User) {
         const dbData = await this.userRepository.findOne({ where: { otpSessionId: user.otpSessionId } });
-
-
         if (!dbData) {
             throw new UnauthorizedException('No data found in the Db')
         }
@@ -241,20 +272,6 @@ export class AuthService {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Login Admin-user part 
 
 
@@ -262,7 +279,7 @@ export class AuthService {
 
         const user = await this.usersService.findByEmail(email);
         if (!user) {
-            throw new ForbiddenException('Invalid credentials');
+            throw new ForbiddenException('You are not a registered user!');
         }
         const ispasswordvalid = await bcrypt.compare(password, user.password);
         if (!ispasswordvalid) {

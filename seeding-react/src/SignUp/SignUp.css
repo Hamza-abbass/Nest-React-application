@@ -119,6 +119,11 @@ body {
 .footer-text span:hover {
   text-decoration: underline;
 }
+span{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 /* Responsive */
 @media (max-width: 480px) {

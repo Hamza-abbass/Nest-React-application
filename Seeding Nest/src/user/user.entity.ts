@@ -21,16 +21,16 @@ export class User {
     role_id: string;
 
     @Column()
-    confirmPassword:string;
+    confirmPassword: string;
 
     @Column({ default: null, type: 'varchar', length: 1024 })
     Code: string;
 
-    @Column({ type: 'timestamp', default:null })
+    @Column({ type: 'timestamp', default: null })
     otp_expires_at: Date;
 
-    @Column({default:null})
-    otpSessionId:string
+    @Column({ default: null })
+    otpSessionId: string
 
     @Column({ nullable: true })
     otp: string;
@@ -42,9 +42,9 @@ export class User {
     @JoinColumn({ name: 'role_id' })
     role: Rolee;
 
-    @OneToOne(()=> Customer, customer=>customer.user)
-    customer:Customer;
-    
+    @OneToOne(() => Customer, customer => customer.user)
+    customer: Customer;
+
     constructor(partial: Partial<User>) {
         Object.assign(this, partial)
     }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
 
 @Injectable()
-export class EncryptionDecryptionService {
+export class EncryptionDecryptionServiceGCM {
     private readonly algorithm = 'aes-256-gcm';
     private readonly key = crypto.scryptSync('secret-key', 'salt', 32);
     private readonly iv = crypto.randomBytes(16);

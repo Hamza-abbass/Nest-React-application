@@ -10,7 +10,8 @@ const SignUp = () => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const password = watch('password');
     const navigate = useNavigate();
-    const [ErrorMessage, setErrorMessage]= useState('');
+    const [ErrorMessage, setErrorMessage] = useState('');
+    const [Message, setMessage] = useState('');
     const navigationButton = () => {
         navigate('/login')
     }
@@ -26,21 +27,30 @@ const SignUp = () => {
 
         });
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
+
+
+
+        // console.log(data.result);
 
         const message = data.message;
+        // console.log(message);
 
-        const user_id = data.id;
-        Cookies.set('user_ID', user_id);
+
+
         if (message == 'Verification screen again') {
-            const id = data.id;
-            Cookies.set('user_ID',id)
+            const user_id = data.id;
+            Cookies.set('user_ID', user_id)
             navigate('/popUpotp')
 
-        }else if(message == 'User is created'){
+        } else if (message == 'User is created') {
+            const user_id = data.result.id;
+            Cookies.set('user_ID', user_id);
             navigate('/popUpotp')
 
-        }else if(message == 'Email is already in use'){
+        } else if (message == 'Email is already in use') {
+            setMessage(message);
+
             navigate('/SignUp');
 
 
@@ -91,7 +101,8 @@ const SignUp = () => {
                     <button className="signup-btn" type="submit">
                         Sign Up
                     </button>
-                    <span>{ErrorMessage}</span>
+                    <span >{Message}</span>
+
                     <p className="footer-text">
                         Already have an account?
                         <span onClick={navigationButton}>Login</span>

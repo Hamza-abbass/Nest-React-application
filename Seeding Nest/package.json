@@ -43,6 +43,7 @@
     "g": "^2.0.1",
     "ioredis": "^5.8.2",
     "mysql": "^2.18.1",
+    "node-rsa": "^1.1.1",
     "nodemailer": "^7.0.10",
     "otp-generator": "^4.0.1",
     "passport": "^0.7.0",

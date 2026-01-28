@@ -16,7 +16,7 @@ import { Order } from './Entities/orders.entity';
 import { Customer } from './Entities/customer.entity';
 import { Contact } from './Entities/contact.entity';
 import { Products } from './Entities/products.entity';
-import { EncryptionDecryptionModule } from './encryption_decryption/encryption_decryption.module';
+import { EncryptionDecryptionModule } from './SymmetricAlgorithms/encryption_decryption.module';
 
 
 @Module({
